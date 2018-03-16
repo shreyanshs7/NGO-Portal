@@ -12,6 +12,7 @@ from .models import UserDetail
 
 @csrf_exempt
 def register(request):
+    data = {}
     if request.method == "POST":
         print(request.POST)
         name = request.POST.get("name")
@@ -21,7 +22,6 @@ def register(request):
         password = request.POST.get("password")
 
         if User.objects.filter(username=username).exists():
-            data = {}
             data['success'] = True
             data['message'] = "Username already exists"
 
@@ -44,17 +44,16 @@ def register(request):
 
             jwtToken = {}
             jwtToken['username'] = username
-            jwtToken['password'] = password
+            jwtToken['name'] = password
+            jwtToken['mobile'] = mobile
 
             token = jwt.encode(jwtToken , SECRET_KEY , algorithm='HS256')
 
-            data = {}
             data['success'] = True
             data['message'] = "User Registered"
 
             return JsonResponse(data,safe=False)
     else:
-        data = {}
         data['success'] = False
         data['message'] = "Method not allowed"        
 
@@ -63,5 +62,39 @@ def register(request):
 
 @csrf_exempt
 def login(request):
+    data = {}
     if request.method == "POST":
+
+        username = request.POST.get("username")
+        password = request.POST.get("password")
+
+        try:
+            user = User.objects.get(username=username)
+        except Exception as e:
+            data['success'] = False
+            data['message'] = "Invalid Username"
+
+            return JsonResponse(data,safe=False)    
+
+        if user.check_password(password):
+
+            jwtToken = {}
+            jwtToken['username'] = username
+            jwtToken['name'] = password
+            jwtToken['mobile'] = mobile
+
+            token = jwt.encode(jwtToken , SECRET_KEY , algorithm='HS256')
+
+            data['success'] = True
+            data['message'] = "User authenticated"
+            data['token'] = token
+
+            return JsonResponse(data,safe=False)
+
+        else:
+
+            data['success'] = False
+            data['message'] = "Invaild credentials"    
+
+            return JsonResponse(data,safe=False)
 
