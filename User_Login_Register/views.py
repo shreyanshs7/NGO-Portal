@@ -43,13 +43,13 @@ def register(request):
             user.save()
 
             authKey = "176332A81pH4L759c8aad6"
-			senderId = "CodeSVS"
-			otp = random.randint(2000,9999)
+            senderId = "CodeSVS"
+            otp = random.randint(2000,9999)
 
             try:
                 sendOtpUrl = "https://control.msg91.com/api/sendotp.php?authkey="+authKey+"&mobile=91"+str(mobile)+"&message=Your%20otp%20is%20"+str(otp)+"&sender="+senderId+"&otp="+str(otp)+""
 
-				response = urllib2.urlopen(sendOtpUrl).read()
+                response = urllib2.urlopen(sendOtpUrl).read()
             
             except Exception as e:
                 print(str(e))
