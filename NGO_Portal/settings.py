@@ -38,7 +38,8 @@ INSTALLED_APPS = [
     'django.contrib.messages',
     'django.contrib.staticfiles',
     'User_Login_Register',
-    'NGO_Login_Register'
+    'NGO_Login_Register',
+    'NGO_Items'
 ]
 
 MIDDLEWARE = [
