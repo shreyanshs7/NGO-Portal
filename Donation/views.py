@@ -9,6 +9,7 @@ from NGO_Login_Register.models import NGODetails
 from User_Login_Register.models import UserDetail
 from .models import Donation
 from django.views.decorators.csrf import csrf_exempt
+import random
 # Create your views here.
 
 @csrf_exempt
@@ -63,4 +64,68 @@ def createDonation(request):
 
 @csrf_exempt
 def pay(request):
-    pass
+    if request.method == "POST":
+
+        posted = {}
+        posted['key'] = "rjQUPktU"
+        posted['txnid'] = request.POST.get("id")
+        posted['productinfo'] = "donation"
+        posted['firstname'] = request.POST.get('firstname')
+        posted['email'] = request.POST.get('email')
+        posted['amount'] = request.POST.get('amount')
+
+        salt="e5iIg1jwi8"
+
+        hashSequence = "key|txnid|amount|productinfo|firstname|email|udf1|udf2|udf3|udf4|udf5|udf6|udf7|udf8|udf9|udf10"
+
+        hashString =''
+        hashVarsSeq=hashSequence.split('|')
+        print(hashVarsSeq)
+        for i in hashVarsSeq:
+            try:
+                hashString+=str(posted[i])
+            except Exception:
+                hashString+=''
+            hashString+='|'
+        hashString+=salt    
+        print(hashString)
+        hash = hashlib.sha512(hashString).hexdigest().lower()
+        print(hash)
+
+        baseUrl = ""
+
+        posted['hash'] = hash
+        posted['surl'] = baseUrl+"/success"
+        posted['furl'] = baseUrl+"/failure"
+        posted['service_provider'] = "payu_paisa"
+
+        return JsonResponse(posted,safe=False)
+
+@csrf_exempt
+def success(request):
+    
+    amount = request.POST.get('amount')
+    id = request.POST.get('txnid')
+    ngoObj = NGO.objects.get(id=id)
+    ngoObj.fund += amount
+    ngoObj.save()
+
+    data = {}
+    data['success'] = True
+    data['message'] = "Payment done" 
+
+    return JsonResponse(data,safe=False)
+
+@csrf_exempt
+def failure(request):
+    data = {}
+    data['success'] = False
+    data['message'] = "Payment failed"
+
+    return JsonResponse(data,safe=False)
+
+
+
+
+
+

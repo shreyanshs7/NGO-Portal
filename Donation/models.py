@@ -11,3 +11,4 @@ class Donation(models.Model):
     date = models.DateField(auto_now=True)
     time = models.TimeField(auto_now=True)
     details = models.CharField(max_length=1000)
+    accepted = models.BooleanField(default=False)

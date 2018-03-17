@@ -32,7 +32,11 @@ def NGOApi(request):
 
     id = request.GET.get("id")
     
-    NGOObj = NGODetails.objects.filter(id=id)
+    itemsObj = Item.objects.filter(id=id)
+
+    NGOObj = NGODetails.objects.filter(item=itemsObj)
+
+    print(NGOObj)    
 
     NGOList = []
 
@@ -47,6 +51,8 @@ def NGOApi(request):
 
         NGOList.append(tempData)
         tempData = {}
+
+    print(NGOList)
 
     data = {}
     data['success'] = True
