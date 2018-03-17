@@ -25,7 +25,7 @@ SECRET_KEY = '#xd@@_j)@pjm_q30)-s0v1imj*9_t5u^*pr4rpf&iyv8o6twt2'
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = ["172.16.196.104"]
+ALLOWED_HOSTS = ["*"]
 
 
 # Application definition
@@ -39,7 +39,8 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
     'User_Login_Register',
     'NGO_Login_Register',
-    'NGO_Items'
+    'NGO_Items',
+    'Donation'
 ]
 
 MIDDLEWARE = [
