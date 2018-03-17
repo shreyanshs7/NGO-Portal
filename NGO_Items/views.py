@@ -4,7 +4,7 @@ from __future__ import unicode_literals
 from django.shortcuts import render
 from .models import Item
 from django.http import JsonResponse
-from NGO_Login_Register.models import NGODetails
+from NGO_Login_Register.models import NGODetails ,NGO
 # Create your views here.
 
 def ItemsApi(request):
@@ -35,10 +35,10 @@ def NGOApi(request):
     NGOList = []
 
     for obj in NGOObj:
-
+        ngoName = NGO.objects.get(name=obj.name)
         tempData = {
             "id": obj.id,
-            "name": obj.name,
+            "name": ngoName.name,
             "location" : obj.location,
             "contact" : obj.contact
         }    
