@@ -30,7 +30,9 @@ def ItemsApi(request):
 
 def NGOApi(request):
 
-    NGOObj = NGODetails.objects.all()
+    id = request.GET.get("id")
+    
+    NGOObj = NGODetails.objects.filter(id=id)
 
     NGOList = []
 

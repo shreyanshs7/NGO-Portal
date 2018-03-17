@@ -8,7 +8,10 @@ from NGO_Items.models import Item
 from NGO_Login_Register.models import NGODetails
 from User_Login_Register.models import UserDetail
 from .models import Donation
+from django.views.decorators.csrf import csrf_exempt
 # Create your views here.
+
+@csrf_exempt
 def createDonation(request):
     data = {}
     if request.method == "POST":
@@ -56,3 +59,8 @@ def createDonation(request):
         data['message'] = "Method not allowed"
 
         return JsonResponse(data,safe=False)
+
+
+@csrf_exempt
+def pay(request):
+    pass
