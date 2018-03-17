@@ -20,4 +20,5 @@ urlpatterns = [
     url(r'^admin/', admin.site.urls),
     #url(r'^ngo/', include('NGO_Login_Register.urls')),
     url(r'^user/', include('User_Login_Register.urls')),
+    url(r'^items/', include('NGO_Items.urls')),
 ]
