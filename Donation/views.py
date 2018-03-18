@@ -5,11 +5,12 @@ from django.shortcuts import render
 import jwt
 from NGO_Portal.settings import SECRET_KEY
 from NGO_Items.models import Item
-from NGO_Login_Register.models import NGODetails
+from NGO_Login_Register.models import NGODetails,NGO
 from User_Login_Register.models import UserDetail
 from .models import Donation
 from django.views.decorators.csrf import csrf_exempt
 import random
+import urllib2
 # Create your views here.
 
 @csrf_exempt
@@ -21,7 +22,7 @@ def createDonation(request):
         quantity = request.POST.get('quantity')
         details = request.POST.get('details')
         token = request.POST.get('token')
-
+        print(token)
         jwtData = jwt.decode(token , SECRET_KEY , algorithm=['HS256'])
 
         username = jwtData['username']
@@ -45,7 +46,7 @@ def createDonation(request):
         donationObj = Donation.objects.create(
             user=userObj,
             item=itemObj,
-            quantity=quantity,
+            quantity=int(quantity),
             details=details
         )
 
@@ -61,6 +62,30 @@ def createDonation(request):
 
         return JsonResponse(data,safe=False)
 
+def donationApi(request):
+
+    donationObj = Donation.objects.all()
+
+    donationList = []
+
+    for obj in donationObj:
+        
+        tempData = {
+            "id": obj.id,
+            "name": obj.user.name,
+            "item" : obj.item.item,
+            "quantity": obj.quantity,
+            "details" : obj.details,
+            "accepted" : obj.accepted
+        }
+        donationList.append(tempData)
+        tempData = {}
+
+    data = {}
+    data['success'] = True
+    data['donation'] = donationList
+
+    return JsonResponse(data,safe=False)
 
 @csrf_exempt
 def pay(request):
@@ -92,11 +117,12 @@ def pay(request):
         hash = hashlib.sha512(hashString).hexdigest().lower()
         print(hash)
 
-        baseUrl = ""
+        baseUrl = "http://192.168.43.55:5000"
 
+        posted['phone'] = "8871915764"
         posted['hash'] = hash
-        posted['surl'] = baseUrl+"/success"
-        posted['furl'] = baseUrl+"/failure"
+        posted['surl'] = baseUrl+"donation/success"
+        posted['furl'] = baseUrl+"donation/failure"
         posted['service_provider'] = "payu_paisa"
 
         return JsonResponse(posted,safe=False)
@@ -124,8 +150,34 @@ def failure(request):
 
     return JsonResponse(data,safe=False)
 
+def accept(request):
+    id = request.GET.get("id")
+    print(id)
+    authKeys = "176332A81pH4L759c8aad6"
+    try:
+        donationObj = Donation.objects.get(id=id)
+    except Exception as e:
+        data = {}
+        data['success'] = False
+        data['message'] = "No entry found"    
 
+    donationObj.accepted = True
+    donationObj.save()
 
+    mobile = donationObj.user.mobile
 
+    message = "Your donation is accepted. Our service person will come to collect your donation"
+
+    sendSosUrl = "https://control.msg91.com/api/sendhttp.php?authkey="+authKeys+"&mobiles=91"+str(mobile)+"&message="+str(message)+"&sender=NgoIND&route=4&country=91"
+
+    response = urllib2.urlopen(sendSosUrl).read()
+
+    print(response)
+
+    data = {}
+    data['success'] = True
+    data['message'] = "Donation accepted"
+
+    return JsonResponse(data,safe=False)
 
 

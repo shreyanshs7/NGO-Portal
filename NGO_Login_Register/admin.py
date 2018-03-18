@@ -13,5 +13,9 @@ class NGODetailsAdmin(admin.ModelAdmin):
     def ngo_item(self,obj):
         return obj.item.item    
 
+class NGOAdmin(admin.ModelAdmin):
+    list_display = ["name","fund"]
+
+
 admin.site.register(NGODetails,NGODetailsAdmin)    
-admin.site.register(NGO)
+admin.site.register(NGO,NGOAdmin)
