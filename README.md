@@ -4,6 +4,10 @@
 Helping Hand is a system which works to bring awareness among people regarding different NGO's and what are their requirements for the NGO. Each NGO will be registered in the web portal with their requirements for the NGO. 
 Mobile app users can donate things to NGOs that are in need of them. Details will be provided of the donated things and they will be verified my the NGOs at the portal and an SMS will be sent if the donated item is viable. Users can also donate money to any NGO with in built payment functionality.
 
+## Admin panel Screenshots
+![screenshot from 2018-03-18 10-30-39](https://user-images.githubusercontent.com/21246960/37814356-93b3d2fc-2e8f-11e8-8d60-6f523663484a.png)
+![screenshot from 2018-03-18 10-30-48](https://user-images.githubusercontent.com/21246960/37814358-93e5127c-2e8f-11e8-9257-ff69459dbd16.png)
+
 ## Platform Dependencies
 Android Studio & SDK
 Django
